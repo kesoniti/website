@@ -1,35 +1,31 @@
 ---
-// Brand lockup: rotational tri-arc mark + wordmark.
+// Brand lockup: official Kesoniti icon mark + typeset wordmark.
 //
-// The mark is a simplified, web-optimised interpretation of the Kesoniti
-// logo — three arcs rotating around a common centre in the brand's teal,
-// navy and silver. To use the official artwork instead, drop it in at
-// `public/logo.svg` and swap the <svg> below for:
-//   <img src="/logo.svg" alt="" width="34" height="34" />
+// public/logo-icon.png is the real logo artwork (the three-arc "K" mark),
+// cropped from the full lockup and with its white background removed so it
+// sits cleanly on both light and dark sections. Source aspect ratio is
+// 765:675 — width is derived from `size` (the rendered height) to avoid
+// distorting it.
+const ICON_ASPECT = 765 / 675;
+
 interface Props {
-  /** Size of the mark in px. */
+  /** Rendered height of the mark in px. Width is derived to preserve aspect ratio. */
   size?: number;
   class?: string;
 }
 const { size = 30, class: className } = Astro.props;
+const width = Math.round(size * ICON_ASPECT);
 ---
 
 <span class:list={['logo', className]}>
-  <svg
+  <img
     class="logo-mark"
-    width={size}
+    src="/logo-icon.png"
+    alt=""
+    width={width}
     height={size}
-    viewBox="0 0 100 100"
-    aria-hidden="true"
-    focusable="false"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <g fill="none" stroke-width="11" stroke-linecap="round">
-      <path d="M16.5,55.9 A34,34 0 0 1 67,20.6" stroke="#35bfc4" />
-      <path d="M16.5,55.9 A34,34 0 0 1 67,20.6" stroke="#1b4a78" transform="rotate(120 50 50)" />
-      <path d="M16.5,55.9 A34,34 0 0 1 67,20.6" stroke="#aab6bf" transform="rotate(240 50 50)" />
-    </g>
-  </svg>
+    style={`height: ${size}px; width: ${width}px;`}
+  />
   <span class="logo-word">KESONITI</span>
 </span>
 
