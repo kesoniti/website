@@ -1,0 +1,158 @@
+---
+import Base from '../../layouts/Base.astro';
+import FlowDiagram from '../../components/FlowDiagram.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.home;
+const isPlaceholder = (s: string) => s.startsWith('[');
+---
+
+<Base lang={lang} slug="" title={p.metaTitle} description={p.metaDescription}>
+  <!-- Hero -->
+  <section class="hero blueprint">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">{p.hero.eyebrow}</p>
+        <h1>{p.hero.heading}</h1>
+        <p class="lede">{p.hero.sub}</p>
+        <div class="hero-ctas">
+          <a class="btn btn--primary" href={`/${lang}/contact/`}>{p.hero.ctaPrimary} <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href={`/${lang}/services/`}>{p.hero.ctaSecondary}</a>
+        </div>
+      </div>
+      <div class="hero-diagram">
+        <FlowDiagram alt={p.hero.diagramAlt} labels={p.hero.diagramLabels} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Credibility strip -->
+  <section class="cred section--steel" aria-label={p.credibility.eyebrow}>
+    <div class="container cred-grid">
+      {p.credibility.items.map((item) => (
+        <div class="cred-item">
+          <span class="cred-value" class:list={[{ placeholder: isPlaceholder(item.value) }]}>{item.value}</span>
+          <span class="cred-label">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Three-tier service model -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">{p.tiers.eyebrow}</p>
+      <h2>{p.tiers.heading}</h2>
+      <p class="lede">{p.tiers.intro}</p>
+      <div class="grid grid--3 tiers-grid">
+        {p.tiers.items.map((tier) => (
+          <article class="card">
+            <span class="card-num">{tier.num}</span>
+            <h3>{tier.name}</h3>
+            <p>{tier.desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules strip -->
+  <section class="section section--dark">
+    <div class="container">
+      <h2>{p.modulesStrip.heading}</h2>
+      <div class="grid grid--4 modules-grid">
+        {p.modulesStrip.items.map((m) => (
+          <article class="card">
+            <span class="module-code">{m.code}</span>
+            <h3>{m.name}</h3>
+            <p>{m.blurb}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>{p.cta.heading}</h2>
+        <p class="lede">{p.cta.sub}</p>
+      </div>
+      <a class="btn btn--primary" href={`/${lang}/contact/`}>{p.cta.button} <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    color: var(--on-dark);
+    padding-block: clamp(4rem, 9vw, 7.5rem);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .hero .lede { color: var(--on-dark-soft); }
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-diagram { max-width: 540px; }
+  }
+
+  .cred { padding-block: 2.4rem; }
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  .cred-item { display: flex; flex-direction: column; gap: 0.3rem; }
+  .cred-value {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1;
+  }
+  .cred-value.placeholder { align-self: flex-start; }
+  .cred-label {
+    font-size: 0.85rem;
+    color: var(--on-dark-soft);
+    max-width: 16rem;
+  }
+  @media (max-width: 800px) {
+    .cred-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .tiers-grid, .modules-grid { margin-top: 2.5rem; }
+
+  .module-code {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    display: inline-block;
+    border: 1px solid var(--accent);
+    padding: 0.15rem 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+</style>

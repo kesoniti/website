@@ -1,0 +1,294 @@
+/* ------------------------------------------------------------------
+   Kesoniti design system
+   Technical-industrial: structured grids, mono labels, restrained
+   palette (graphite / deep steel blue / signal orange accent).
+   ------------------------------------------------------------------ */
+
+:root {
+  /* Palette */
+  --paper: #f2f3f0;        /* warm light grey, not pure white */
+  --surface: #fafbf9;
+  --ink: #171d24;
+  --ink-soft: #46505c;
+  --line: #d3d7d0;
+  --line-strong: #aab0a8;
+
+  --graphite: #101820;     /* dark section background */
+  --graphite-2: #18222c;
+  --steel: #1b4a78;        /* deep navy, from the logo */
+  --steel-soft: #93aec7;
+  --on-dark: #e9ecec;
+  --on-dark-soft: #9aa9b4;
+  --line-dark: #27333f;
+
+  /* Accent — the logo teal. Three tints so text keeps AA contrast on both
+     light and dark surfaces while graphics can use the brighter value. */
+  --accent: #35bfc4;         /* bright teal — graphics, dark backgrounds */
+  --accent-deep: #0b6e73;    /* dark teal — text/borders on light surfaces */
+  --accent-hover: #0e8388;
+
+  /* Type */
+  --font-head: 'Archivo', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --container: 1160px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+img, svg { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
+::selection { background: var(--accent-deep); color: #fff; }
+
+/* Accessibility ---------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+.section--dark :focus-visible,
+.section--steel :focus-visible,
+.blueprint :focus-visible,
+.site-footer :focus-visible {
+  outline-color: var(--accent);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--graphite);
+  color: var(--on-dark);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Layout ----------------------------------------------------------- */
+
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.section {
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.section--dark {
+  background: var(--graphite);
+  color: var(--on-dark);
+  border-top-color: var(--line-dark);
+}
+.section--steel {
+  background: var(--steel);
+  color: var(--on-dark);
+  border-top-color: transparent;
+}
+
+/* Corner tick mark on sections — small technical detail */
+.section > .container { position: relative; }
+
+/* Typography ------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.1rem, 5.2vw, 3.6rem); }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
+h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-deep);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+.eyebrow::before {
+  content: '';
+  width: 1.6rem;
+  height: 2px;
+  background: currentColor;
+  flex: none;
+}
+.section--dark .eyebrow,
+.section--steel .eyebrow,
+.blueprint .eyebrow { color: var(--accent); }
+
+.lede {
+  font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+  color: var(--ink-soft);
+  max-width: 46rem;
+  margin-top: 1.2rem;
+}
+.section--dark .lede, .section--steel .lede { color: var(--on-dark-soft); }
+
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Buttons ---------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.98rem;
+  text-decoration: none;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid transparent;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn--primary {
+  background: var(--accent-deep);
+  color: #fff;
+}
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--ghost {
+  border-color: var(--line-strong);
+  color: var(--ink);
+  background: transparent;
+}
+.btn--ghost:hover { border-color: var(--ink); }
+.section--dark .btn--ghost, .section--steel .btn--ghost, .blueprint .btn--ghost {
+  border-color: var(--steel-soft);
+  color: var(--on-dark);
+}
+.section--dark .btn--ghost:hover, .section--steel .btn--ghost:hover, .blueprint .btn--ghost:hover {
+  border-color: var(--on-dark);
+  background: rgba(255, 255, 255, 0.06);
+}
+.btn .arrow { font-family: var(--font-mono); }
+
+/* Cards & grids ---------------------------------------------------- */
+
+.grid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.grid > * { background: var(--surface); padding: clamp(1.4rem, 3vw, 2.2rem); }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+.section--dark .grid { background: var(--line-dark); border-color: var(--line-dark); }
+.section--dark .grid > * { background: var(--graphite-2); }
+
+@media (max-width: 900px) {
+  .grid--3, .grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .grid--2, .grid--3, .grid--4 { grid-template-columns: 1fr; }
+}
+
+.card-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-deep);
+  margin-bottom: 0.9rem;
+  display: block;
+}
+.section--dark .card-num, .section--steel .card-num { color: var(--accent); }
+.card h3 { margin-bottom: 0.7rem; }
+.card p { color: var(--ink-soft); font-size: 0.98rem; }
+.section--dark .card p { color: var(--on-dark-soft); }
+
+/* Technical list (square markers) --------------------------------- */
+
+.tech-list { list-style: none; }
+.tech-list li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.98rem;
+  color: var(--ink-soft);
+}
+.tech-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  background: var(--accent-deep);
+}
+.section--dark .tech-list li::before { background: var(--accent); }
+.section--dark .tech-list li { color: var(--on-dark-soft); }
+
+/* Tags ------------------------------------------------------------- */
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+  margin: 0 0.4rem 0.4rem 0;
+}
+.section--dark .tag { border-color: var(--line-dark); color: var(--on-dark-soft); }
+
+/* Placeholder marker — makes [BRACKETED] content visually explicit  */
+
+.placeholder {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(224, 122, 16, 0.1),
+    rgba(224, 122, 16, 0.1) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  outline: 1px dashed rgba(200, 108, 16, 0.6);
+  padding: 0.05em 0.3em;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Hero grid backdrop ----------------------------------------------- */
+
+.blueprint {
+  background-color: var(--graphite);
+  background-image:
+    linear-gradient(rgba(143, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+}

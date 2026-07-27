@@ -1,0 +1,93 @@
+---
+import Logo from './Logo.astro';
+import type { Lang, Content } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  t: Content;
+}
+const { lang, t } = Astro.props;
+const year = new Date().getFullYear();
+
+const navLinks = [
+  { href: `/${lang}/about/`, label: t.nav.about },
+  { href: `/${lang}/services/`, label: t.nav.services },
+  { href: `/${lang}/methodology/`, label: t.nav.methodology },
+  { href: `/${lang}/industries/`, label: t.nav.industries },
+  { href: `/${lang}/contact/`, label: t.nav.contact },
+];
+const modules = ['SAP PP', 'SAP PP/DS', 'SAP QM', 'SAP PM', 'SAP IBP'];
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <Logo size={28} class="footer-logo" />
+      <p>{t.footer.tagline}</p>
+    </div>
+    <nav aria-label="Footer">
+      <h2 class="mono-label">{t.footer.colNavigate}</h2>
+      <ul>
+        {navLinks.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div>
+      <h2 class="mono-label">{t.footer.colModules}</h2>
+      <ul>
+        {modules.map((m) => (
+          <li>{m}</li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2 class="mono-label">{t.footer.colContact}</h2>
+      <ul>
+        <li>{t.footer.address}</li>
+        <li><a href={`mailto:${t.footer.email}`}>{t.footer.email}</a></li>
+        <li><a href={t.footer.linkedinUrl} rel="noopener">{t.footer.linkedin}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© {year} {t.footer.rights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--graphite);
+    color: var(--on-dark-soft);
+    font-size: 0.93rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.4fr;
+    gap: 2.5rem;
+    padding-block: 3.5rem;
+  }
+  .footer-logo {
+    color: var(--on-dark);
+    margin-bottom: 0.9rem;
+  }
+  .footer-brand p { max-width: 26rem; }
+  .mono-label { color: var(--steel-soft); margin-bottom: 1rem; display: block; }
+  h2.mono-label { font-weight: 500; }
+  ul { list-style: none; }
+  li { margin-bottom: 0.5rem; }
+  a { color: var(--on-dark-soft); text-decoration: none; }
+  a:hover { color: var(--on-dark); }
+  .footer-bottom {
+    border-top: 1px solid var(--line-dark);
+    padding-block: 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  @media (max-width: 900px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>

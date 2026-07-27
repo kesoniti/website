@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.about;
+---
+
+<Base lang={lang} slug="about" title={p.metaTitle} description={p.metaDescription}>
+  <section class="section page-hero">
+    <div class="container">
+      <p class="eyebrow">{p.hero.eyebrow}</p>
+      <h1>{p.hero.heading}</h1>
+      <p class="lede">{p.hero.sub}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story-grid">
+      <div>
+        <h2>{p.story.heading}</h2>
+        {p.story.paragraphs.map((par) => <p class="story-par">{par}</p>)}
+      </div>
+      <aside class="mission">
+        <p class="mono-label mission-label">{p.mission.heading}</p>
+        <p class="mission-text">{p.mission.text}</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container">
+      <p class="eyebrow">{p.model.eyebrow}</p>
+      <h2>{p.model.heading}</h2>
+      <div class="grid grid--3 model-grid">
+        {p.model.items.map((item, i) => (
+          <article class="card">
+            <span class="card-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{item.name}</h3>
+            <p>{item.desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">{p.leadership.eyebrow}</p>
+      <h2>{p.leadership.heading}</h2>
+      <div class="bio">
+        <div class="bio-head">
+          <p class="bio-name">{p.leadership.name}</p>
+          <p class="bio-role">{p.leadership.role}</p>
+        </div>
+        {p.leadership.bio.map((par) => <p class="bio-par">{par}</p>)}
+        <div class="creds">
+          <h3 class="mono-label creds-label">{p.leadership.credentialsLabel}</h3>
+          <ul class="tech-list">
+            {p.leadership.credentials.map((c) => <li>{c}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { border-top: none; }
+  .story-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .story-par {
+    margin-top: 1.2rem;
+    color: var(--ink-soft);
+    max-width: 42rem;
+  }
+  .mission {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent-deep);
+    background: var(--surface);
+    padding: clamp(1.4rem, 3vw, 2rem);
+  }
+  .mission-label { color: var(--accent-deep); margin-bottom: 0.9rem; display: block; }
+  .mission-text { font-size: 1.05rem; }
+  @media (max-width: 900px) {
+    .story-grid { grid-template-columns: 1fr; }
+  }
+  .model-grid { margin-top: 2.5rem; }
+  .bio { margin-top: 2rem; max-width: 46rem; }
+  .bio-head {
+    border-left: 3px solid var(--accent-deep);
+    padding-left: 1.1rem;
+    margin-bottom: 1.6rem;
+  }
+  .bio-name { font-family: var(--font-head); font-weight: 700; font-size: 1.3rem; }
+  .bio-role {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-top: 0.25rem;
+  }
+  .bio-par { margin-bottom: 1.1rem; color: var(--ink-soft); }
+  .creds {
+    margin-top: 2.4rem;
+    border-top: 1px solid var(--line);
+    padding-top: 1.8rem;
+  }
+  .creds-label { color: var(--accent-deep); margin-bottom: 1.1rem; display: block; }
+</style>

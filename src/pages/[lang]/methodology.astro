@@ -1,0 +1,97 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.methodology;
+---
+
+<Base lang={lang} slug="methodology" title={p.metaTitle} description={p.metaDescription}>
+  <section class="section page-hero">
+    <div class="container">
+      <p class="eyebrow">{p.hero.eyebrow}</p>
+      <h1>{p.hero.heading}</h1>
+      <p class="lede">{p.hero.sub}</p>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container">
+      <h2>{p.phasesHeading}</h2>
+      <ol class="phases">
+        {p.phases.map((phase) => (
+          <li class="phase">
+            <div class="phase-marker" aria-hidden="true">
+              <span class="phase-num">{phase.num}</span>
+              <span class="phase-line"></span>
+            </div>
+            <div class="phase-body">
+              <h3>{phase.name}</h3>
+              <p>{phase.desc}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">{p.diffs.eyebrow}</p>
+      <h2>{p.diffs.heading}</h2>
+      <div class="grid grid--3 diffs-grid">
+        {p.diffs.items.map((d, i) => (
+          <article class="card">
+            <span class="card-num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{d.name}</h3>
+            <p>{d.desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { border-top: none; }
+  .phases {
+    list-style: none;
+    margin-top: 2.8rem;
+    max-width: 52rem;
+  }
+  .phase {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1.5rem;
+  }
+  .phase-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .phase-num {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 0.45rem 0.55rem;
+    line-height: 1;
+  }
+  .phase-line {
+    flex: 1;
+    width: 1px;
+    background: var(--line-dark);
+    min-height: 1.5rem;
+  }
+  .phase:last-child .phase-line { display: none; }
+  .phase-body { padding-bottom: 2.6rem; }
+  .phase-body h3 { margin-bottom: 0.6rem; }
+  .phase-body p { color: var(--on-dark-soft); font-size: 0.98rem; max-width: 44rem; }
+  .diffs-grid { margin-top: 2.5rem; }
+</style>

@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.industries;
+---
+
+<Base lang={lang} slug="industries" title={p.metaTitle} description={p.metaDescription}>
+  <section class="section page-hero">
+    <div class="container">
+      <p class="eyebrow">{p.hero.eyebrow}</p>
+      <h1>{p.hero.heading}</h1>
+      <p class="lede">{p.hero.sub}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--3 sectors-grid">
+        {p.sectors.map((s, i) => (
+          <article class="card sector">
+            <span class="card-num">{String(i + 1).padStart(2, '0')}</span>
+            <h2 class="sector-name">{s.name}</h2>
+            <p>{s.desc}</p>
+            <div class="sector-tags">
+              {s.tags.map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="note">{p.note}</p>
+    </div>
+  </section>
+
+  <section class="section section--steel">
+    <div class="container beyond">
+      <h2>{p.beyond.heading}</h2>
+      <p class="lede">{p.beyond.text}</p>
+      <a class="btn btn--ghost beyond-cta" href={`/${lang}/contact/`}>
+        {t.nav.cta} <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { border-top: none; }
+  .sector-name { font-size: 1.2rem; margin-bottom: 0.7rem; }
+  .sector-tags { margin-top: 1.2rem; }
+  .note {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .beyond-cta { margin-top: 2rem; }
+</style>

@@ -1,0 +1,56 @@
+---
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { languages, getContent, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  /** Page slug without language prefix, '' for home. Used for hreflang + lang switcher. */
+  slug: string;
+  title: string;
+  description: string;
+}
+
+const { lang, slug, title, description } = Astro.props;
+const t = getContent(lang);
+const site = Astro.site ?? new URL('https://kesoniti.com');
+const path = (l: string) => `/${l}/${slug ? slug + '/' : ''}`;
+const canonical = new URL(path(lang), site);
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {languages.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(path(l), site)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(path('en'), site)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kesoniti" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{lang === 'tr' ? 'İçeriğe atla' : lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+    <Header lang={lang} slug={slug} t={t} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} t={t} />
+  </body>
+</html>

@@ -1,0 +1,139 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.contact;
+---
+
+<Base lang={lang} slug="contact" title={p.metaTitle} description={p.metaDescription}>
+  <section class="section page-hero">
+    <div class="container">
+      <p class="eyebrow">{p.hero.eyebrow}</p>
+      <h1>{p.hero.heading}</h1>
+      <p class="lede">{p.hero.sub}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact-grid">
+      <!--
+        Form backend is intentionally not wired up. Point `action` at a
+        Formspree/Netlify Forms/mail endpoint before launch.
+      -->
+      <form class="inquiry-form" method="post" action="#">
+        <div class="form-row">
+          <div class="field">
+            <label for="f-name">{p.form.name}</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="f-email">{p.form.email}</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="f-company">{p.form.company}</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization" required />
+          </div>
+          <div class="field">
+            <label for="f-module">{p.form.module}</label>
+            <select id="f-module" name="module" required>
+              <option value="" disabled selected>{p.form.modulePlaceholder}</option>
+              {p.form.moduleOptions.map((opt) => <option value={opt}>{opt}</option>)}
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-message">{p.form.message}</label>
+          <textarea id="f-message" name="message" rows="7" placeholder={p.form.messagePlaceholder} required></textarea>
+        </div>
+        <p class="privacy-note">{p.form.privacyNote}</p>
+        <p class="config-note placeholder">{p.form.configNote}</p>
+        <button class="btn btn--primary" type="submit">{p.form.submit} <span class="arrow" aria-hidden="true">→</span></button>
+      </form>
+
+      <aside class="direct">
+        <h2 class="mono-label direct-heading">{p.info.heading}</h2>
+        <dl>
+          <dt class="mono-label">{p.info.addressLabel}</dt>
+          <dd class="address">{p.info.address}</dd>
+          <dt class="mono-label">{p.info.emailLabel}</dt>
+          <dd><a href={`mailto:${p.info.email}`}>{p.info.email}</a></dd>
+          <dt class="mono-label">{p.info.linkedinLabel}</dt>
+          <dd><a href={p.info.linkedinUrl} rel="noopener">{p.info.linkedin}</a></dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { border-top: none; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem;
+  }
+  @media (max-width: 640px) {
+    .form-row { grid-template-columns: 1fr; }
+  }
+  .field { margin-bottom: 1.4rem; }
+  label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+  input, select, textarea {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    padding: 0.75rem 0.9rem;
+    border-radius: 0;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--accent-deep);
+    outline-offset: 0;
+    border-color: var(--accent-deep);
+  }
+  textarea { resize: vertical; }
+  .privacy-note { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.8rem; }
+  .config-note { font-size: 0.8rem; display: inline-block; margin-bottom: 1.4rem; }
+
+  .direct {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent-deep);
+    background: var(--surface);
+    padding: clamp(1.4rem, 3vw, 2rem);
+  }
+  .direct-heading { color: var(--accent-deep); margin-bottom: 1.4rem; display: block; }
+  dt { color: var(--ink-soft); margin-top: 1.2rem; }
+  dt:first-of-type { margin-top: 0; }
+  dd { margin-top: 0.3rem; }
+  dd.address { white-space: pre-line; }
+  dd a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid currentColor; }
+  dd a:hover { color: var(--ink); }
+</style>

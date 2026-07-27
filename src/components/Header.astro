@@ -1,0 +1,165 @@
+---
+import Logo from './Logo.astro';
+import { languages, type Lang, type Content } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+  t: Content;
+}
+const { lang, slug, t } = Astro.props;
+
+const links = [
+  { href: `/${lang}/`, label: t.nav.home, slug: '' },
+  { href: `/${lang}/about/`, label: t.nav.about, slug: 'about' },
+  { href: `/${lang}/services/`, label: t.nav.services, slug: 'services' },
+  { href: `/${lang}/methodology/`, label: t.nav.methodology, slug: 'methodology' },
+  { href: `/${lang}/industries/`, label: t.nav.industries, slug: 'industries' },
+  { href: `/${lang}/contact/`, label: t.nav.contact, slug: 'contact' },
+];
+const langHref = (l: string) => `/${l}/${slug ? slug + '/' : ''}`;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="wordmark" href={`/${lang}/`} aria-label="Kesoniti LLC — home">
+      <Logo size={30} />
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li>
+            <a href={l.href} aria-current={l.slug === slug ? 'page' : undefined}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        {languages.map((l) => (
+          <a href={langHref(l)} aria-current={l === lang ? 'true' : undefined} lang={l}>{l.toUpperCase()}</a>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    height: 4.25rem;
+  }
+  .wordmark {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .site-nav { display: flex; align-items: center; gap: 2rem; }
+  .site-nav ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .site-nav ul a {
+    text-decoration: none;
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    padding-block: 0.4rem;
+    border-bottom: 2px solid transparent;
+  }
+  .site-nav ul a:hover { color: var(--ink); }
+  .site-nav ul a[aria-current='page'] {
+    color: var(--ink);
+    border-bottom-color: var(--accent-deep);
+  }
+  .lang-switch {
+    display: flex;
+    border: 1px solid var(--line-strong);
+  }
+  .lang-switch a {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    color: var(--ink-soft);
+  }
+  .lang-switch a + a { border-left: 1px solid var(--line-strong); }
+  .lang-switch a[aria-current='true'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: 1px solid var(--line-strong);
+    padding: 0.7rem 0.8rem;
+    cursor: pointer;
+  }
+  .nav-toggle-bar {
+    width: 20px;
+    height: 2px;
+    background: var(--ink);
+    transition: transform 0.15s;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .nav-toggle { display: flex; }
+    .site-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 1rem clamp(1.25rem, 4vw, 2.5rem) 1.5rem;
+    }
+    .site-nav.open { display: flex; }
+    .site-nav ul { flex-direction: column; gap: 0; }
+    .site-nav ul a {
+      display: block;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 1rem;
+    }
+    .site-nav ul a[aria-current='page'] { border-bottom-color: var(--accent-deep); }
+    .lang-switch { margin-top: 1rem; align-self: flex-start; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  toggle?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(Boolean(open)));
+  });
+</script>

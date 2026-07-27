@@ -1,0 +1,107 @@
+---
+// Schematic production-flow diagram used on the home hero.
+// Pure inline SVG — no image requests, crisp at every size.
+interface Props {
+  alt: string;
+  labels: {
+    demand: string;
+    planning: string;
+    execution: string;
+    quality: string;
+    maintenance: string;
+    feedback: string;
+  };
+}
+const { alt, labels } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 640 330"
+  role="img"
+  aria-label={alt}
+  class="flow-diagram"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 z" fill="currentColor" />
+    </marker>
+    <marker id="arr-acc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 z" class="accent-fill" />
+    </marker>
+  </defs>
+
+  <!-- main flow: demand -> planning -> shop floor -->
+  <g class="box">
+    <rect x="16" y="120" width="130" height="64" />
+    <text x="81" y="157">{labels.demand}</text>
+  </g>
+
+  <g class="box box--core">
+    <rect x="246" y="108" width="150" height="88" />
+    <text x="321" y="157">{labels.planning}</text>
+    <!-- corner ticks -->
+    <path d="M246,100 v-8 h8 M396,100 v-8 h-8 M246,204 v8 h8 M396,204 v8 h-8" class="tick" />
+  </g>
+
+  <g class="box">
+    <rect x="496" y="120" width="130" height="64" />
+    <text x="561" y="157">{labels.execution}</text>
+  </g>
+
+  <line x1="146" y1="152" x2="238" y2="152" class="wire" marker-end="url(#arr)" />
+  <line x1="396" y1="152" x2="488" y2="152" class="wire" marker-end="url(#arr)" />
+
+  <!-- feedback: shop floor -> QM / PM -> planning -->
+  <g class="box box--sub">
+    <rect x="216" y="252" width="92" height="48" />
+    <text x="262" y="281">{labels.quality}</text>
+  </g>
+  <g class="box box--sub">
+    <rect x="334" y="252" width="92" height="48" />
+    <text x="380" y="281">{labels.maintenance}</text>
+  </g>
+
+  <path d="M561,184 V276 H434" class="wire wire--dash" marker-end="url(#arr-acc)" fill="none" />
+  <line x1="334" y1="276" x2="316" y2="276" class="wire wire--dash" />
+  <line x1="262" y1="252" x2="262" y2="206" class="wire wire--dash" marker-end="url(#arr-acc)" />
+  <line x1="380" y1="252" x2="380" y2="206" class="wire wire--dash" marker-end="url(#arr-acc)" />
+
+  <text x="216" y="322" class="note" text-anchor="start">{labels.feedback}</text>
+</svg>
+
+<style>
+  .flow-diagram {
+    width: 100%;
+    height: auto;
+    color: var(--on-dark-soft);
+    font-family: var(--font-mono);
+  }
+  .box rect {
+    fill: rgba(255, 255, 255, 0.02);
+    stroke: currentColor;
+    stroke-width: 1.2;
+  }
+  .box text {
+    fill: var(--on-dark);
+    font-size: 15px;
+    text-anchor: middle;
+  }
+  .box--core rect {
+    stroke: var(--accent);
+    stroke-width: 1.6;
+    fill: rgba(224, 90, 16, 0.07);
+  }
+  .box--core text { font-weight: 600; }
+  .box--sub rect { stroke-dasharray: none; }
+  .box--sub text { font-size: 13px; fill: var(--on-dark-soft); }
+  .tick { stroke: var(--accent); stroke-width: 1.2; fill: none; }
+  .wire { stroke: currentColor; stroke-width: 1.2; }
+  .wire--dash { stroke-dasharray: 5 5; stroke: var(--accent); opacity: 0.8; }
+  .accent-fill { fill: var(--accent); }
+  .note {
+    font-size: 12px;
+    fill: var(--on-dark-soft);
+    letter-spacing: 0.08em;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+// Root — detects browser language client-side, falls back to English.
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kesoniti</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      const supported = ['en', 'tr', 'es'];
+      const pref = (navigator.languages ?? [navigator.language])
+        .map((l) => l.slice(0, 2).toLowerCase())
+        .find((l) => supported.includes(l));
+      window.location.replace(`/${pref ?? 'en'}/`);
+    </script>
+    <meta http-equiv="refresh" content="0;url=/en/" />
+  </head>
+  <body>
+    <p><a href="/en/">English</a> · <a href="/tr/">Türkçe</a> · <a href="/es/">Español</a></p>
+  </body>
+</html>

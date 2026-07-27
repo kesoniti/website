@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getContent, languagePaths, type Lang } from '../../i18n';
+
+export function getStaticPaths() {
+  return languagePaths();
+}
+
+const lang = Astro.params.lang as Lang;
+const t = getContent(lang);
+const p = t.services;
+---
+
+<Base lang={lang} slug="services" title={p.metaTitle} description={p.metaDescription}>
+  <section class="section page-hero">
+    <div class="container">
+      <p class="eyebrow">{p.hero.eyebrow}</p>
+      <h1>{p.hero.heading}</h1>
+      <p class="lede">{p.hero.sub}</p>
+      <nav class="module-jump" aria-label="Modules">
+        {p.modules.map((m) => (
+          <a href={`#${m.id}`}>{m.code}</a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  {p.modules.map((m, i) => (
+    <section class="section" class:list={[i % 2 === 1 ? 'section--dark' : '']} id={m.id}>
+      <div class="container">
+        <div class="module-head">
+          <span class="module-code">{m.code}</span>
+          <h2>{m.name}</h2>
+          <p class="lede">{m.tagline}</p>
+        </div>
+        <div class="module-cols">
+          <div>
+            <h3 class="mono-label col-label">{p.scopeLabel}</h3>
+            <ul class="tech-list">
+              {m.scope.map((s) => <li>{s}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h3 class="mono-label col-label">{p.problemsLabel}</h3>
+            <ul class="tech-list">
+              {m.problems.map((s) => <li>{s}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h3 class="mono-label col-label">{p.outcomesLabel}</h3>
+            <ul class="tech-list">
+              {m.outcomes.map((s) => <li>{s}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--steel">
+    <div class="container">
+      <p class="eyebrow">{p.expansion.eyebrow}</p>
+      <h2>{p.expansion.heading}</h2>
+      <p class="lede">{p.expansion.text}</p>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <div class="container">
+      <p>{p.note}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { border-top: none; }
+  .module-jump {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .module-jump a {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-decoration: none;
+    border: 1px solid var(--line-strong);
+    padding: 0.4rem 0.9rem;
+    color: var(--ink-soft);
+  }
+  .module-jump a:hover { border-color: var(--accent-deep); color: var(--accent-deep); }
+
+  .module-code {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--accent-deep);
+    display: inline-block;
+    border: 1px solid currentColor;
+    padding: 0.2rem 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .section--dark .module-code { color: var(--accent); }
+  .module-head { max-width: 50rem; }
+  .module-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+    margin-top: 2.8rem;
+  }
+  .col-label {
+    color: var(--accent-deep);
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.78rem;
+  }
+  .section--dark .col-label {
+    color: var(--accent);
+    border-bottom-color: var(--line-dark);
+  }
+  @media (max-width: 900px) {
+    .module-cols { grid-template-columns: 1fr; }
+  }
+  .disclaimer {
+    padding-block: 1.6rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+  }
+</style>
